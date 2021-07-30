@@ -2,7 +2,34 @@ import { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head'
 import styled from 'styled-components';
 
-import { initialFrame30x30 } from '../initialFrame';
+  // const ResizeArray = (index, decrease) => {
+
+  //   if (decrease === 1) {
+  //     actualFrame.forEach((row) => row.splice(index, decrease));
+  //     actualFrame.splice(index, decrease);
+  //     console.log(actualFrame);
+  //     return actualFrame
+  
+  //   } else {
+  //     const element = 0;
+  //     actualFrame.forEach((row) => row.splice(index, decrease, element))
+  //     actualFrame.splice(index, decrease, actualFrame[0]);
+  //     console.log(actualFrame);
+  //     return actualFrame
+  //   }
+  // }
+
+const createArray = (n = 10) => {
+  const arrayOfArray = [];
+  for (let i = 0;i < n; i++) {
+    const row = [];
+    for (let j = 0; j < n; j++) {
+      row.push(0)
+    };
+    arrayOfArray.push(row)
+  };
+  return arrayOfArray;
+};
 
 const useCounter = () => {
   const [ counter, setCounter ] = useState(0)
@@ -32,38 +59,37 @@ const useBoolean = () => {
   };
 };
 
-// const useGame = (initialValue) => {
-//   const [ frame, setFrame ] = useState(initialValue);
-//   const savedFrame, setSavedFrame ] = useState(initialValue);
+const useGame = (initialValue) => {
+  const [ actualframe, setActualFrame ] = useState(initialValue);
+  const [ savedFrame, setSavedFrame ] = useState(initialValue);
 
-//   const handleFrame = (indexRow, indexColumn) => {
-//     if (frame[indexRow][indexColumn] > 0) {
-//       return setFrame(frame[indexRow][indexColumn] = 0)
-//     }
-//     return
-//   };
+  const handleClick = (indexRow, indexColumn) => {
+    if (actualframe[indexRow][indexColumn] > 0) {
+      return setActualFrame(actualframe[indexRow][indexColumn] = 0)
+    }
+    return
+  };
 
-//   const memoizedFrame = useMemo(() =>
-//     frame.map((row, indexRow) => (
-//       row.map((cellular, indexColumn) => {
-//         const result = sumLife(frame, indexRow, indexColumn, cellular);
-//         if (result > 0) return setSavedFrame()
-//         ? savedFrame[indexRow][indexColumn] = 0
-//         : savedFrame[indexRow][indexColumn] = 1
-//       })
-//     ))
-//   , [frame])
+  const memoizedFrame = useMemo(() =>
+    actualframe.map((row, indexRow) => (
+      row.map((cellular, indexColumn) => {
+        return setSavedFrame(savedFrame[indexRow][indexColumn] = sumLife(actualFrame, indexRow, indexColumn, cellular))
+      })
+    ))
+  , [frame, savedFrame])
 
-//   useEffect(() => {
-//     if (isGameRun.boolean) {
-//       generation.increase();
+  useEffect(() => {
+    if (isGameRun.boolean) {
+      generation.increase();
 
-//       setTimeout(() => {
-//         memoizedFrame()
-//       }, 200);
-//     }
-//   }, [isGameRun.boolean, frame])
-// }
+      setTimeout(() => {
+        memoizedFrame()
+      }, 200);
+    }
+  }, [isGameRun.boolean, frame])
+}
+
+
 
 
 export default function Home() {
@@ -72,38 +98,9 @@ export default function Home() {
   const isGameRun = useBoolean();
   const isConfigDisplay = useBoolean();
 
-  const initialFrame = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  ];
+
+
+  const initialFrame = createArray(20);
 
   const saveFrame = initialFrame;
 
@@ -113,22 +110,6 @@ export default function Home() {
 
   let [ actualFrame, setActualFrame ] = useState(initialFrame);
 
-  // const ResizeArray = (index, decrease) => {
-
-  //   if (decrease === 1) {
-  //     actualFrame.forEach((row) => row.splice(index, decrease));
-  //     actualFrame.splice(index, decrease);
-  //     console.log(actualFrame);
-  //     return actualFrame
-  
-  //   } else {
-  //     const element = 0;
-  //     actualFrame.forEach((row) => row.splice(index, decrease, element))
-  //     actualFrame.splice(index, decrease, actualFrame[0]);
-  //     console.log(actualFrame);
-  //     return actualFrame
-  //   }
-  // }
 
   const sumLife = (array, row, column, center) => {
     let NW = 0;
@@ -259,13 +240,13 @@ export default function Home() {
       setTimeout(() => {
         generation.increase();
 
-        actualFrame.map((row, indexRow) => {
-          row.map((cellular, indexColumn) => {
+        actualFrame.forEach((row, indexRow) => {
+          row.forEach((cellular, indexColumn) => {
             return saveFrame[indexRow][indexColumn] = sumLife(actualFrame, indexRow, indexColumn, cellular);
           })
         })
         setActualFrame(saveFrame);
-      }, 200)
+      },)
     }
   }, [isGameRun.boolean, actualFrame])
 
@@ -308,13 +289,13 @@ export default function Home() {
 
         <Game rowsTotal={rowsTotal} columnsTotal={columnsTotal}>
           {
-            actualFrame.map((row, indexRow) => {
-              return row.map((cellular, indexColumn) =>
+            actualFrame.map((row, indexRow) => (
+              row.map((cellular, indexColumn) =>
                 cellular === 0
                 ? <Cellular cellular={cellular} onClick={() => handleClick(indexRow, indexColumn) } key={`row${indexRow}-column${indexColumn}`}></Cellular>
                 : <Cellular cellular={cellular} onClick={() => handleClick(indexRow, indexColumn) } key={`row${indexRow}-column${indexColumn}`}></Cellular>
               )
-            })
+            ))
           }
         </Game>
 
