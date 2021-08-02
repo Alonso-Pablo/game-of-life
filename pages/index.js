@@ -9,12 +9,11 @@ const createArray = (n) => {
 
 export default function Home() {
 
-  const initialFrame = createArray(30)
-  
+  const initialFrame = createArray(40);
   const generation = useValue(0);
+
   const generationSpeed = useValue(0);
   const isGameRun = useValue(false);
-
   const isConfigDisplay = useValue(false);
   const isGrid = useValue(true);
   
@@ -119,7 +118,7 @@ export default function Home() {
       let result = NW + N + NE + E + SE + S + SW + W;
       return result
     }
-  } // CalculateCardinals()
+  }; // CalculateCardinals()
 
   const sumLife = (array, row, column, center) => {
     
@@ -137,9 +136,9 @@ export default function Home() {
   
   useEffect(() => {
     if (isGameRun.value) {
-      
+
       if (actualFrame.toString() === gameProperty.noLife) { // If no more life...
-        return isGameRun.setFalse() 
+        return isGameRun.setFalse();
       } else {
         const saveFrame = initialFrame;
 
@@ -151,11 +150,11 @@ export default function Home() {
             })
           })
           setActualFrame(saveFrame);
-        }, generationSpeed.value)
-      }
-    }
-  }, [isGameRun.value, actualFrame])
-  
+        }, generationSpeed.value);
+      };
+    };
+  }, [isGameRun.value, actualFrame]);
+
   const handleClick = (indexRow, indexColumn) => {
     actualFrame[indexRow][indexColumn] === 1
     ? setActualFrame(actualFrame[indexRow][indexColumn] = 0)
