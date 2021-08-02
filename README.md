@@ -1,34 +1,153 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Conway's Game of Life
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
+
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
+
+  
+## Screenshots
+
+![App Screenshot](https://github.com/Alonso-Pablo/game-of-life/blob/main/preview/preview.png?raw=true)
+
+  
+## Notes
+[About Conway's Game of Life in Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
+#### 🧮 Create the initial array for the board:
+```javascript
+const createArray = (n = 10) => {
+  const arrayOfArray = [];
+  for (let i = 0;i < n; i++) {
+    const row = [];
+    for (let j = 0; j < n; j++) {
+      row.push(0)
+    };
+    arrayOfArray.push(row)
+  };
+  return arrayOfArray;
+};
+```
+#### Render Game: 
+```Javascript
+<Game rowsTotal={rowsTotal} columnsTotal={columnsTotal}>
+    {
+    actualFrame.map((row, indexRow) => (
+        row.map((cellular, indexColumn) =>
+        cellular === 0
+        ? <Cellular cellular={cellular} onClick={() => handleClick(indexRow, indexColumn) } key={`row${indexRow}-column${indexColumn}`}></Cellular>
+        : <Cellular cellular={cellular} onClick={() => handleClick(indexRow, indexColumn) } key={`row${indexRow}-column${indexColumn}`}></Cellular>
+        )
+    ))
+    }
+</Game>
+//... Styled Components 💅
+const Game = styled.div`
+  box-sizing: border-box;
+  display: grid;
+
+  //...
+
+  grid-template-rows: repeat(${({rowsTotal}) => rowsTotal || 10}, 1fr);
+  grid-template-columns: repeat(${({columnsTotal}) => columnsTotal || 10}, 1fr);
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  // ...
+  }
+`;
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### 🔍 To create the next frame, each cell and its neighboring cells are analyzed:
+⬜     | Left        | Center    | Right 
+------ | ----------- | --------- | -------
+Top    | n[y-1][x-1] | n[y-1][x] | n[y-1][x+1] 
+Center | n[y][x-1]   |  n[y][x]  |  n[y][x+1] 
+Bottom | n[y+1][x-1] | n[y+1][x] | n[y+1][x+1] 
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+#### 📍 Taking the cardinal points as a reference. If the neighboring cell of the Northwest (NW) is equal to 1, internally in the `CalculateCardinals ()` function and thus the same with N, NE, E, SE, S, SW and W.:
+```javascript
+    const CalculateCardinals = (array, row, column) => {
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+    // Corners
+      if (row === 0 && column === 0) { // array[0][0]
+        E = array[row][column + 1];
+        SE = array[row + 1][column + 1];
+        S = array[row + 1][column];
+        let result = NW + N + NE + E + SE + S + SW + W;
+        return result
+      }
+      if (row === 0 && column === limitMapX) { // array[0][limitMap.x]
+        S = array[row + 1][column];
+        SW = array[row + 1][column - 1];
+        W = array[row][column - 1];
+        let result = NW + N + NE + E + SE + S + SW + W;
+        return result
+      }
+      if (row === limitMapY && column === limitMapX) { // array[limitMap.y]][limitMap.x]
+        NW = array[row - 1][column - 1];
+        N = array[row - 1][column];
+        W = array[row][column - 1];
+        let result = NW + N + NE + E + SE + S + SW + W;
+        return result
+      }
+      if (row === limitMapY && column === 0) { // array[limitMap.y][0]
+        N = array[row - 1][column];
+        NE = array[row - 1][column + 1];
+        E = array[row][column + 1];
+        let result = NW + N + NE + E + SE + S + SW + W;
+        return result
+      }
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+      // Edges
+      // Top
+      if (row === 0) {
+        E = array[row][column + 1];
+        SE = array[row + 1][column + 1];
+        S = array[row + 1][column];
+        SW = array[row + 1][column - 1];
+        W = array[row][column - 1];
+        let result = NW + N + NE + E + SE + S + SW + W;
+        return result
+      }
+      // Bottom
+      if (row === limitMapY) {
+        NW = array[row - 1][column - 1];
+        N = array[row - 1][column];
+        NE = array[row - 1][column + 1];
+        E = array[row][column + 1];
+        W = array[row][column - 1];
+        let result = NW + N + NE + E + SE + S + SW + W;
+        return result
+      }
+      // left
+      if (column === 0) {
+        N = array[row - 1][column]
+        NE = array[row - 1][column + 1]
+        E = array[row][column + 1]
+        SE = array[row + 1][column + 1]
+        S = array[row + 1][column]
+        let result = NW + N + NE + E + SE + S + SW + W;
+        return result
+      }
+      // right
+      if (column === limitMapX) {
+        NW = array[row - 1][column - 1]
+        N = array[row - 1][column]
+        S = array[row + 1][column]
+        SW = array[row + 1][column - 1]
+        W = array[row][column - 1]
+        let result = NW + N + NE + E + SE + S + SW + W;
+        return result
+      } else { // Inside
+        NW = array[row - 1][column - 1]
+        N = array[row - 1][column]
+        NE = array[row - 1][column + 1]
+        E = array[row][column + 1]
+        SE = array[row + 1][column + 1]
+        S = array[row + 1][column]
+        SW = array[row + 1][column - 1]
+        W = array[row][column - 1]
+        let result = NW + N + NE + E + SE + S + SW + W;
+        return result
+      }
+    } // CalculateCardinals()
+```
