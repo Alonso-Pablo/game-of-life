@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import Head from 'next/head'
+import { useValue } from '../hooks/useValue';
 import styled from 'styled-components';
-import { useValue } from '../hooks/useValue'
+import Head from 'next/head';
 
 const createArray = (n) => {
  return Array(n).fill(0).map(()=> Array(n).fill(0));
@@ -9,7 +9,7 @@ const createArray = (n) => {
 
 export default function Home() {
 
-  const initialFrame = createArray(40);
+  const initialFrame = createArray(30);
   const generation = useValue(0);
 
   const generationSpeed = useValue(0);
@@ -18,7 +18,6 @@ export default function Home() {
   const isGrid = useValue(true);
   
   let [ actualFrame, setActualFrame ] = useState(initialFrame);
-
   let [ gameProperty , setGameProperty ] = useState({
     rowsTotal: initialFrame.length,
     columnsTotal: initialFrame[0].length,
@@ -183,12 +182,26 @@ export default function Home() {
 
       <Main>
 
+        <GitHub title="Go to the repository of this project." href="https://github.com/Alonso-Pablo/game-of-life">
+          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="120" viewBox="0 24 180 168" fill="none">
+            <path d="M180 168L0 0H180V168Z" fill="black"/>
+            <path fill="white" fillRule="evenodd" clipRule="evenodd" d="M129 9C105.775 9 87 27.7946 87 51.0441C87 69.6299 99.0298 85.3616 115.719 90.9304C117.805 91.348 118.57 90.0255 118.57 88.9117C118.57 87.9372 118.5 84.5959 118.5 81.1154C106.818 83.6214 104.384 76.1036 104.384 76.1036C102.507 71.2309 99.7252 69.9779 99.7252 69.9779C95.9007 67.4024 100.003 67.4024 100.003 67.4024C104.245 67.6808 106.47 71.7182 106.47 71.7182C110.225 78.1222 116.275 76.3124 118.709 75.1986C119.056 72.4839 120.169 70.6044 121.351 69.5603C112.033 68.5857 102.228 64.966 102.228 48.8166C102.228 44.2224 103.897 40.4635 106.54 37.5399C106.123 36.4958 104.662 32.18 106.957 26.4024C106.957 26.4024 110.503 25.2886 118.5 30.7182C121.838 29.8132 125.454 29.326 129 29.326C132.546 29.326 136.162 29.8132 139.5 30.7182C147.497 25.2886 151.043 26.4024 151.043 26.4024C153.338 32.18 151.877 36.4958 151.46 37.5399C154.172 40.4635 155.772 44.2224 155.772 48.8166C155.772 64.966 145.967 68.5161 136.579 69.5603C138.109 70.8828 139.43 73.3888 139.43 77.3565C139.43 82.9949 139.361 87.5195 139.361 88.9117C139.361 90.0255 140.126 91.348 142.212 90.9304C158.901 85.3616 170.93 69.6299 170.93 51.0441C171 27.7946 152.156 9 129 9Z"/>
+            <path fill="white" d="M102.924 69.3514C102.854 69.5603 102.507 69.6299 102.228 69.4907C101.95 69.3514 101.742 69.073 101.881 68.8642C101.95 68.6553 102.298 68.5857 102.576 68.725C102.854 68.8642 102.993 69.1426 102.924 69.3514Z"/>
+            <path fill="white" d="M104.593 71.2309C104.384 71.4397 103.967 71.3005 103.758 71.0221C103.48 70.7436 103.411 70.326 103.619 70.1171C103.828 69.9083 104.175 70.0475 104.454 70.326C104.732 70.674 104.801 71.0917 104.593 71.2309Z"/>
+            <path fill="white" d="M106.262 73.6672C105.983 73.8761 105.566 73.6672 105.358 73.3192C105.079 72.9711 105.079 72.4839 105.358 72.3446C105.636 72.1358 106.053 72.3446 106.262 72.6927C106.54 73.0407 106.54 73.4584 106.262 73.6672Z"/>
+            <path fill="white" d="M108.556 76.034C108.348 76.3124 107.861 76.2428 107.444 75.8947C107.096 75.5467 106.957 75.0594 107.235 74.8506C107.444 74.5722 107.93 74.6418 108.348 74.9898C108.695 75.2683 108.765 75.7555 108.556 76.034Z"/>
+            <path fill="white" d="M111.685 77.3565C111.616 77.7046 111.129 77.8438 110.642 77.7046C110.156 77.5654 109.877 77.1477 109.947 76.8693C110.017 76.5212 110.503 76.382 110.99 76.5212C111.477 76.6604 111.755 77.0085 111.685 77.3565Z"/>
+            <path fill="white" d="M115.093 77.635C115.093 77.983 114.675 78.2615 114.189 78.2615C113.702 78.2615 113.285 77.983 113.285 77.635C113.285 77.2869 113.702 77.0085 114.189 77.0085C114.675 77.0085 115.093 77.2869 115.093 77.635Z"/>
+            <path fill="white" d="M118.291 77.0781C118.361 77.4261 118.013 77.7742 117.526 77.8438C117.04 77.9134 116.623 77.7046 116.553 77.3565C116.483 77.0085 116.831 76.6604 117.318 76.5908C117.805 76.5212 118.222 76.73 118.291 77.0781Z"/>
+          </svg>
+        </GitHub>
+
         <ControllersContainer top="1px" justifyContent="flex-end">
           {isConfigDisplay.value &&
           <>
             <Configuration title="Speed between generations" isDisplay={isConfigDisplay.value} borderBottom="none" borderRadius="2px 2px 0 0">
 
-            <Button onClick={() => generationSpeed.slowDown()}> - </Button>
+              <Button onClick={() => generationSpeed.slowDown()}> - </Button>
 
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 13 13" fill="none">
                 <circle cx="6.5" cy="6.5" r="6" stroke="black"/>
@@ -272,6 +285,12 @@ export default function Home() {
   )
 }
 
+const GitHub = styled.a`
+  position: absolute;
+  top: 0%;
+  right: 0%;
+`;
+
 
 const Cellular = styled.button`
   width: ${({isGrid}) => isGrid ? '95%' : '100%'};
@@ -282,6 +301,7 @@ const Cellular = styled.button`
 `;
 
 const Main = styled.main`
+ position: relative;
   display: flex;
   width: 100%;
   height: 100vh;
