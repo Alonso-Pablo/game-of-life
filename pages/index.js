@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Head from 'next/head';
 
 const createArray = (n) => {
- return Array(n).fill(0).map(()=> Array(n).fill(0));
+  return Array(n).fill(0).map(()=> Array(n).fill(0));
 };
 
 export default function Home() {
@@ -37,42 +37,49 @@ export default function Home() {
     let W = 0;
 
   // Corners
-    if (row === 0 && column === 0) { // array[0][0]
-      E = array[row][column + 1];
-      SE = array[row + 1][column + 1];
-      S = array[row + 1][column];
+  
+    // array[0][0] - top left
+    if (row === 0 && column === 0) {
+      E = array[0][1];
+      SE = array[1][1];
+      S = array[1][0];
       let result = E + SE + S;
       return result
     }
-    if (row === 0 && column === gameProperty.limitMapX) { // array[0][limitMap.x]
-      S = array[row + 1][column];
-      SW = array[row + 1][column - 1];
-      W = array[row][column - 1];
+    // array[0][limitMap.x] - top right
+    if (row === 0 && column === gameProperty.limitMapX) {
+      S = array[1][column];
+      SW = array[1][column - 1];
+      W = array[0][column - 1];
       let result = S + SW + W;
       return result
     }
-    if (row === gameProperty.limitMapY && column === gameProperty.limitMapX) { // array[limitMap.y]][limitMap.x]
+    // array[limitMap.y]][limitMap.x] - bottom right
+    if (row === gameProperty.limitMapY && column === gameProperty.limitMapX) {
       NW = array[row - 1][column - 1];
       N = array[row - 1][column];
       W = array[row][column - 1];
       let result = NW + N + W;
       return result
     }
-    if (row === gameProperty.limitMapY && column === 0) { // array[limitMap.y][0]
-      N = array[row - 1][column];
-      NE = array[row - 1][column + 1];
-      E = array[row][column + 1];
+    // array[limitMap.y][0] - bottom left
+    if (row === gameProperty.limitMapY && column === 0) {
+      N = array[row - 1][0];
+      NE = array[row - 1][1];
+      E = array[row][1];
       let result = N + NE + E;
       return result
     }
-    // Edges
+    
+  // Edges
+    
     // Top
     if (row === 0) {
-      E = array[row][column + 1];
-      SE = array[row + 1][column + 1];
-      S = array[row + 1][column];
-      SW = array[row + 1][column - 1];
-      W = array[row][column - 1];
+      E = array[0][column + 1];
+      SE = array[1][column + 1];
+      S = array[1][column];
+      SW = array[1][column - 1];
+      W = array[0][column - 1];
       let result = E + SE + S + SW + W;
       return result
     }
@@ -88,11 +95,11 @@ export default function Home() {
     }
     // left
     if (column === 0) {
-      N = array[row - 1][column]
-      NE = array[row - 1][column + 1]
-      E = array[row][column + 1]
-      SE = array[row + 1][column + 1]
-      S = array[row + 1][column]
+      N = array[row - 1][0]
+      NE = array[row - 1][1]
+      E = array[row][1]
+      SE = array[row + 1][1]
+      S = array[row + 1][0]
       let result = N + NE + E + SE + S;
       return result
     }
